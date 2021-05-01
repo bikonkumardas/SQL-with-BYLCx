@@ -1,0 +1,294 @@
+ Retrieve Data
+1)--Retrieving Data
+
+Select * from Products ;
+----------------------------
+Select product_ID,product_name,product_price from Products ;
+
+
+
+2)--Creating a Table
+
+create table Dress(
+ID int(10) primary key,
+Brand varchar(50) not null,
+Type varchar(50) not null,
+Color varchar(50) ,
+Price decimal(8,2),
+Description varchar(50) null
+);
+
+2.1)---Creating a Table with Foreign Key
+
+create table Dress(
+ID int(10) primary key,
+Brand varchar(50) not null,
+Type varchar(50) not null,
+Color varchar(50) ,
+Price decimal(8,2),
+Description varchar(50) null,
+Supplier_ID int(10) Foreign Key references 
+Supplier(Supplier_ID )
+);
+
+2.2)---Creating a Temporary Table (only for SQLlite)
+
+Create table Sweater 
+as 
+( select * from Dress 
+ Where dress_type = ‘sweater’ );
+
+3)--Inserting data 
+
+Insert into Dress
+Values(‘1234’,”prada’,’cocktail Dress’,’Black’,700,null);
+
+--Recommended way to insert data
+
+Insert into Dress (Brand,
+Type,
+Color ,
+Price ,
+Description ) 
+Values  (‘1234’,”prada’,’cocktail Dress’,’Black’,700,null);
+
+4)--Updating a table
+
+Update Dress
+Set  brand = ‘Abercrombie’,type =’Shirt’ 
+Where ID= 11;
+
+
+5)--Deleting data from a  table
+
+DELETE from Dress
+Where type =’sweater’;
+
+6)--Adding Comment
+
+Use “--” for single line comments
+Use” /* … …. … */  “ for multiple line comment
+
+7)--Filtering Data(WHERE,BETWEEN,Operators)
+------WHERE_______
+Select * from products 
+where product_id = 22;
+
+------BETWEEN--------
+Select * from products 
+where product_price BETWEEN 100 AND 200;
+
+-------IS NULL------
+Select * from products 
+where product IS NULL;
+
+ ---------IN -------------
+Select * from products 
+WHERE Brand IN(‘Gucci’,’Prada’,’Chanel’);
+
+
+
+ ---------IN -------------
+Select * from Customers
+Where City In(Select City From Suppliers);
+
+
+
+ ---------OR -------------
+Select * from products 
+WHERE brand= ‘Gucci’ OR ’Prada’;
+
+
+ --------AND -------------
+Select * brand,price from products 
+WHERE brand =’Gucci’ AND price <500;
+
+--------NOT-------------
+
+SELECT protduct_type
+FROM  products 
+WHERE product_type=’t-shirt’ ;
+
+------Combining OR with AND and NOT------
+
+Select * from Customers
+Where City=’Dhaka’ AND (city =’chattogram’ OR city=’Sylhet’);
+
+
+Select * from Customers
+Where NOT City=’Dhaka’ NOT City=’Sylhet’ ;
+
+------LIKE------%-----_------
+Select * from products
+Where product_name LIKE ‘b%’;
+-----
+
+Select * from products
+Where product_name LIKE ‘%b’;
+----
+Select * from products
+Where product_name LIKE ‘%b%’;
+----
+
+Select * from products
+Where product_name LIKE ‘_read’;
+
+Select * from products
+Where product_name LIKE ‘_b%’;
+
+Select * from products
+Where product_name LIKE ‘_b_’;
+
+
+8)--Sorting Data
+
+Select * from products 
+ORDER BY product_name ASC;
+
+(OR)
+
+
+Select * from products 
+ORDER BY product_name DESC;
+
+
+9) --Math Operator
+
+--Addition
+
+Select employee_name,employee_salary,bonus,employee_salary+bonus AS bonus_salary
+FROM employee;
+
+--Subtraction
+
+Select employee_name,NoOfLate,NoOfLeave,NoOfLeave-NoOfLate AS Leave_reamining 
+FROm employee;
+
+--Multiplication (same as Addition and subtraction)
+
+---Order of Operators--
+PEMDAS  -- Please Excuse Me Dear Aunt Sally
+
+
+
+
+
+10)--Aggregate Functions
+
+select SUM(price) As Total Cost 
+from supplies;
+
+
+
+select SUM(price*quantity) As Total Cost 
+from supplies 
+Where Supplier_ID =18;
+
+
+--MAX--
+
+select MAX(price) As MAXIMUM_Cost 
+from products ;
+
+--MIN--
+
+select MIN(price) As MAXIMUM_Cost 
+from products ;
+
+--COUNT--
+select COUNT(*)  As Total_products
+From products;
+
+--if I don’t want NULL values
+
+select COUNT(product_id)  As Total_products
+From products;
+
+--to get no repeated values--
+
+select COUNT(DISTINCT product_id)  As Total_products
+From products;
+
+11)--GROUP BY
+
+SELECT depertment_id,MAX(Employee_salary) AS Max-Salary 
+From Employee 
+GROUP BY dept_ID;
+
+
+
+--GROUP BY with COUNT and ORDER BY
+
+Select category_id,COUNT(*)  AS Total_Products
+FROM products 
+WHERE categoty_id IS NOT NULL
+GROUP BY category_id
+ORDER BY category_id;
+
+
+--Having Clause 
+
+Select * from products 
+GROUP BY category_id
+HAVING categoy_id=12;
+
+
+12) --Subquery
+
+Select product_id,product_name,product_price
+From Product
+Where product_Id IN (select product_id from order 
+                                    Where quantity_ordered>100);
+
+
+
+
+13)--Join
+
+a)--INNER JOIN
+
+Select supplier.supplier_name,product_name,unit_price 
+FROM Supplier INNER JOIN Products ON Supplier.supplier_id = Product.product_id;
+
+--INNER JOIN with Multiple Tables
+
+Select order.Order_id.customer.Customer_id,delivery.Employee_name 
+FROM (( Order INNER JOIN Customer ON order.customer_id=customer.customer_id)
+INNER JOIN Delivery on order.Employee_id=delivery.Employee_id)
+
+
+
+
+
+
+b)--SELF JOIN
+
+
+Select A.Customer_name AS First_customer,B.Customer_name AS second_customer,A.city
+FROM Customer A,Customer B
+WHERE  Customer A<>Customer B
+AND A.city=B.city
+ORDER BY A.city;
+
+c)--LEFT JOIN
+
+SELECT C.customer_name,O.Order_id
+FROM C 
+LEFT JOIN Orders O ON C.customer_id =O.Cusstomer_id
+ORDER BY C.Customer_name;
+
+d)--FULL OUTER JOIN
+
+SELECT C.customer_name,O.Order_id
+FROM Customer C
+FULL OUTER JOIN  Orders O ON C.customer_id =O.Cusstomer_id
+ORDER BY C.Customer_name;
+
+
+
+
+
+
+
+
+
